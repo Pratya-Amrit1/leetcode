@@ -11,6 +11,6 @@ class Solution {
                 return false;
             }
         }
-        return (count<=1);
+        return true;
     }
 }
