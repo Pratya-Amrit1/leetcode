@@ -1,3 +1,4 @@
+
    class Solution {
     public void moveZeroes(int[] nums) {
         int j = 0; // Pointer to place the next non-zero element
