@@ -9,10 +9,9 @@ class Solution {
                 if(mpp.get(nums[l])==0){
                     mpp.remove(nums[l]);
                 }
-                    l++;
-                
+                l++;  
             }
-                cnt +=(r-l+1);
+            cnt +=(r-l+1);
             r++;
         }
         return cnt;
@@ -21,4 +20,4 @@ class Solution {
     public int subarraysWithKDistinct(int[] nums, int k) {
         return help(nums,k) - help(nums ,k-1);
     }
-}
+} 
