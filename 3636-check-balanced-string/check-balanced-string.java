@@ -11,7 +11,7 @@ class Solution {
         }
 
        }
-       if(oddsum==evensum)return true;
-       return false;
+       
+       return oddsum==evensum;
     }
 }
