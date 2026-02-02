@@ -1,51 +1,76 @@
 class Solution {
     public long minimumCost(int[] nums, int k, int dist) {
         int n = nums.length;
-        int targetK = k - 1;
-        int[] sorted = nums.clone();
-        Arrays.sort(sorted);
-        int m = 0;
-        for (int i = 0; i < n; i++) {
-            if (i == 0 || sorted[i] != sorted[i - 1]) sorted[m++] = sorted[i];
-        }
+        
+        PriorityQueue<Integer> pq_left = new PriorityQueue<>((a, b)->b-a);
+        PriorityQueue<Integer> pq_right = new PriorityQueue<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        int valid_left = 0;
+        long sum_left = 0;
 
-        long[] bitSum = new long[m + 1];
-        int[] bitCount = new int[m + 1];
-        int maxPow2 = Integer.highestOneBit(m);
+        long res = Long.MAX_VALUE;
 
-        long minExtra = Long.MAX_VALUE;
-        for (int i = 1; i < n; i++) {
-            int rank = Arrays.binarySearch(sorted, 0, m, nums[i]) + 1;
-            update(rank, nums[i], 1, bitSum, bitCount, m);
-            if (i > dist + 1) {
-                int oldRank = Arrays.binarySearch(sorted, 0, m, nums[i - dist - 1]) + 1;
-                update(oldRank, -nums[i - dist - 1], -1, bitSum, bitCount, m);
+        for(int i=1; i<n; i++){
+            //删除旧元素，此时堆顶元素合法
+            if(i>=dist+2){
+                int v = nums[i-dist-1];  //旧元素
+                if(v<pq_left.peek()){
+                    map.merge(v, 1, Integer::sum);
+                    valid_left--;
+                    sum_left -= v;
+                }
+                else if(v==pq_left.peek()){
+                    pq_left.poll();
+                    valid_left--;
+                    sum_left -= v;
+                }
+                else if(v==pq_right.peek()){
+                    pq_right.poll();
+                }
+                else{
+                    map.merge(v, 1, Integer::sum);
+                }
             }
-            if (i >= targetK) {
-                minExtra = Math.min(minExtra, query(targetK, bitSum, bitCount, sorted, m, maxPow2));
+
+
+            if(i<=k-1 || nums[i]<=pq_left.peek()){
+                pq_left.offer(nums[i]);
+                valid_left++;
+                sum_left += nums[i];
+            }
+            else{
+                pq_right.offer(nums[i]);
+            }
+
+            if(i>k-1){
+                if(valid_left<k-1){
+                    int v = pq_right.poll();
+                    pq_left.offer(v);
+                    valid_left++;
+                    sum_left += v;
+                }
+                else if(valid_left>k-1){
+                    int v = pq_left.poll();
+                    valid_left--;
+                    sum_left -= v;
+                    pq_right.offer(v);
+                }
+            }
+
+
+            while(!pq_left.isEmpty() && map.getOrDefault(pq_left.peek(), 0)>0){
+                int v = pq_left.poll();
+                map.merge(v, -1, Integer::sum);
+            }
+            while(!pq_right.isEmpty() && map.getOrDefault(pq_right.peek(), 0)>0){
+                int v = pq_right.poll();
+                map.merge(v, -1, Integer::sum);
+            }
+
+            if(i>=dist+1){
+                res = Math.min(res, sum_left);
             }
         }
-        return nums[0] + minExtra;
-    }
-
-    private void update(int idx, int val, int cnt, long[] bSum, int[] bCnt, int m) {
-        for (; idx <= m; idx += idx & -idx) {
-            bSum[idx] += val;
-            bCnt[idx] += cnt;
-        }
-    }
-
-    private long query(int k, long[] bSum, int[] bCnt, int[] sorted, int m, int maxPow2) {
-        int idx = 0, curCnt = 0;
-        long curSum = 0;
-        for (int i = maxPow2; i > 0; i >>= 1) {
-            if (idx + i <= m && curCnt + bCnt[idx + i] < k) {
-                idx += i;
-                curCnt += bCnt[idx];
-                curSum += bSum[idx];
-            }
-        }
-        if (curCnt < k) curSum += (long) (k - curCnt) * sorted[idx];
-        return curSum;
+        return res+nums[0];
     }
 }
