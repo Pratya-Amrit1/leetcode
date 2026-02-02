@@ -11,9 +11,9 @@ class Solution {
         long res = Long.MAX_VALUE;
 
         for(int i=1; i<n; i++){
-            //删除旧元素，此时堆顶元素合法
+           
             if(i>=dist+2){
-                int v = nums[i-dist-1];  //旧元素
+                int v = nums[i-dist-1]; 
                 if(v<pq_left.peek()){
                     map.merge(v, 1, Integer::sum);
                     valid_left--;
