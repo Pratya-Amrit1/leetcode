@@ -27,12 +27,11 @@
 
 class Solution {
     public boolean isValidBST(TreeNode root) {
-        return helper(root, Long.MIN_VALUE, Long.MAX_VALUE);
+       return valid(root ,Long.MIN_VALUE ,Long.MAX_VALUE);
     }
-    
-    private boolean helper(TreeNode node, long min, long max) {
-        if (node == null) return true;
-        if (node.val <= min || node.val >= max) return false;
-        return helper(node.left, min, node.val) && helper(node.right, node.val, max);
+    public boolean valid(TreeNode root ,Long left ,Long right){
+        if(root ==null)return true;
+        if(root.val>= right || root.val<=left)return false;
+        return valid(root.left ,left ,(long)root.val) && valid(root.right ,(long)root.val , right);
     }
 }
