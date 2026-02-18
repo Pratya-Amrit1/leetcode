@@ -1,23 +1,28 @@
-class Solution {
-    static final long MOD = 1_000_000_007;
 
-    long modExp(long base, long exp, long mod) {
-        long result = 1;
-        base %= mod;
-        while (exp > 0) {
-            if ((exp & 1) == 1)
-                result = (result * base) % mod;
-            base = (base * base) % mod;
-            exp >>= 1;
+class Solution {
+    public long helper(long base,long expo,long mod){
+        long ans = 1;
+        while(expo>0)
+        {
+            if(expo%2==0)            
+            {
+                base = (base*base)%mod;
+                expo = expo/2;
+            }
+            else{
+                ans = (ans*base)%mod;
+                expo-=1;
+            }
         }
-        return result;
+        return ans;
     }
 
     public int countGoodNumbers(long n) {
-        long evens = (n + 1) / 2;
-        long odds = n / 2;
-        long evenPart = modExp(5, evens, MOD);
-        long oddPart = modExp(4, odds, MOD);
-        return (int)((evenPart * oddPart) % MOD);
+        if(n==1) return 5;
+        long even = (n+1)/2;
+        long odd = n/2;
+        long mod = 1000000007;
+        return (int)((helper(5,even,mod)*helper(4,odd,mod))%mod);
+        
     }
 }
