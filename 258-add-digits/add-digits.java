@@ -1,17 +1,12 @@
 class Solution {
+    public static int digitSum(int num) {
+        if (num < 10) return num;
+        return (num % 10) + digitSum(num / 10);
+    }
+
     public int addDigits(int n) {
-    
-     int sum=0;
-     while(n>9){
-         int temp=n;
-        while(temp!=0){
-       int d=temp%10;
-       sum+=d;
-       temp=temp/10;
-        }
-       n=sum;
-       sum=0;
-     }  
-     return n; 
+        if(n<10)return n;
+        int sum =digitSum(n);
+        return addDigits(sum);
     }
 }
