@@ -26,12 +26,11 @@ class Solution {
         }
     }
     public boolean isSafe(char[][] board, int row, int col) {
-        //top row
+
         for (int i = 0; i < row; i++) {
             if (board[i][col] == 'Q') return false;
         }
-        //left diagonal
-        // This approach is standard, you can remember this
+       
         int maxLeft=Math.min(row,col);
         for(int i=1;i<=maxLeft;i++){
             if(board[row-i][col-i]=='Q') return false;
