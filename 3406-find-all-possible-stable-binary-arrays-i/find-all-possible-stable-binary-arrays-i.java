@@ -1,37 +1,27 @@
 class Solution {
-    int MOD = 1000000007;
     public int numberOfStableArrays(int zero, int one, int limit) {
+        final int mod = 1_000_000_007;
+        int L = limit + 1;
+
+        int[][] dp0 = new int[zero + 1][one + 1]; 
+        int[][] dp1 = new int[zero + 1][one + 1]; // i 0s + j 1s ending with 1
         
-        int[][][] dp = new int[201][201][2];
-        
-        // base case
-        dp[0][0][0] = 1;
-        dp[0][0][1] = 1;
+        // Base cases: only zeros or only ones => only one string if len <= min(limit, zero/one)
+        for (int i = 1; i <= Math.min(zero, limit); ++i) dp0[i][0] = 1;
+        for (int j = 1; j <= Math.min(one, limit); ++j) dp1[0][j] = 1;
 
-        for( int onesLeft = 0; onesLeft <= one; onesLeft++ ) {
-            for( int zeroesLeft = 0; zeroesLeft <= zero; zeroesLeft++ ) {
+        // DP iterations
+        for (int i = 1; i <= zero; ++i) {
+            for (int j = 1; j <= one; ++j) {
+                dp0[i][j] = (dp0[i - 1][j] + dp1[i - 1][j] - (i >= L ? dp1[i - L][j] : 0)) % mod;
+                dp1[i][j] = (dp1[i][j - 1] + dp0[i][j - 1] - (j >= L ? dp0[i][j - L] : 0)) % mod;
 
-                if( onesLeft == 0 && zeroesLeft == 0 ) continue;
-
-                int result = 0;
-
-                for( int len = 1; len <= Math.min( zeroesLeft , limit ); len++ ) {
-                    result = ( result + dp[onesLeft][zeroesLeft - len][0] ) % MOD;
-                }
-                dp[onesLeft][zeroesLeft][1] = result;
-
-                result = 0;
-                for( int len = 1; len <= Math.min( onesLeft , limit ); len++ ) {
-                    result = ( result + dp[onesLeft - len][zeroesLeft][1] ) % MOD;
-                }
-                dp[onesLeft][zeroesLeft][0] = result;
+                // Fix negatives
+                dp0[i][j] = (dp0[i][j] + mod) % mod;
+                dp1[i][j] = (dp1[i][j] + mod) % mod;
             }
         }
 
-        int startWithOne = dp[one][zero][0];
-        int startWithZero = dp[one][zero][1];
-
-        return ( startWithOne + startWithZero ) % MOD;
-
+        return (dp0[zero][one] + dp1[zero][one]) % mod;
     }
 }
