@@ -12,7 +12,17 @@ class Solution {
     public int rob(int[] nums) {
         int n= nums.length;
         int[] dp = new int[n];
-        Arrays.fill(dp,-1);
-        return f(n-1,nums,dp);
+        dp[0]=nums[0];
+        int neg=0;
+        int take=0,notake=0;
+        for(int i=1;i<n;i++){
+            take = nums[i];
+            if(i>1) take+=dp[i-2];
+            notake =0+dp[i-1];
+            dp[i]= Math.max(take,notake);
+                    }
+                    return dp[n-1];
+        // Arrays.fill(dp,-1);
+        // return f(n-1,nums,dp);
     }
 }
