@@ -4,7 +4,6 @@ class Solution {
             result.add(new ArrayList<>(current));
             return;
         }
-
         generateSubsets(index + 1, nums, current, result);
         current.add(nums[index]);
         generateSubsets(index + 1, nums, current, result);
