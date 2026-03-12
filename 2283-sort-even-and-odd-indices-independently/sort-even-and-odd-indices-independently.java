@@ -1,32 +1,29 @@
 class Solution {
     public int[] sortEvenOdd(int[] nums) {
-        int len = nums.length;
-
-        for (int i = 0; i < len; i += 2) {
-            for (int j = i + 2; j < len; j += 2) {
-
-                if (nums[i] > nums[j]) {
-                    swap(nums, i, j);
-                }
-            }
+        if (nums.length%2 == 0) {
+            Solution.quicksort(nums, 1, nums.length+1, false);
+            Solution.quicksort(nums, 0, nums.length, true);
+        } else {
+            Solution.quicksort(nums, 1, nums.length, false);
+            Solution.quicksort(nums, 0, nums.length+1, true);
         }
-
-        for (int i = 1; i < len; i += 2) {
-            for (int j = i + 2; j < len; j += 2) {
-
-                if (nums[i] < nums[j]) {
-                    swap(nums, i, j);
-                }
-            }
-        }
-
         return nums;
     }
-
-    private void swap(int[] arr, int index1, int index2) {
-
-        int tmp = arr[index1];
-        arr[index1] = arr[index2];
-        arr[index2] = tmp;
+    public static void quicksort(int[] nums, int low, int high, boolean ascending) { //high is not inclusive
+        if (low+2 >= high) {return;}
+        int pivot = nums[low]; //low to high
+        int left = low;
+        int right = low+2;
+        while (right<high) {
+            if ((nums[right] < pivot) == ascending) {
+                nums[left] = nums[right];
+                left+=2;
+                nums[right] = nums[left];
+            }
+            right+=2;
+        }
+        nums[left] = pivot;
+        Solution.quicksort(nums, low, left, ascending);
+        Solution.quicksort(nums, left+2, high, ascending);
     }
 }
