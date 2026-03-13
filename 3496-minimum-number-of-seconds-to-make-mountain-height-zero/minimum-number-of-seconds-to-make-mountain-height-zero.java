@@ -1,29 +1,29 @@
 class Solution {
-    public long minNumberOfSeconds(int h, int[] t) {
-        PriorityQueue<long[]>pq = new PriorityQueue<>(
-            (a,b) ->Long.compare(a[0],b[0])
-        );
-        for(int i = 0; i<t.length;i++){
-            pq.add(new long[]{t[i],i,1});
-        }
-        long res = 0;
-        while(h>0){
-            long[] curr =pq.poll();
-
-            long tm = curr[0];
-            int id = (int)curr[1];
-            int x = (int)curr[2];
-
-            res = tm;
-            h--;
-
-            if(h>0){
-                long nx = x+1;
-                long nt = (long)t[id] * (nx *(nx+1)/2);
-                pq.add(new long[]{nt ,id,nx});
-
+    public long minNumberOfSeconds(int mountainHeight, int[] workerTimes) {
+        long left = 0;
+        long right = (long)1e18;
+        long ans =  right;
+        while(left<=right){
+            long mid =  left+(right-left)/2;
+            if(solve(mid,mountainHeight, workerTimes)){
+                ans =  mid;
+                right =  mid-1;
+            }  else{
+                left =  mid+1;
             }
         }
-        return res;
+        return ans;
+    }
+    public boolean solve(long time,int height, int[] workerTimes){
+        long total = 0;
+        for(int t:workerTimes ){
+            long val  =  (2*time)/t;
+            long x = (long)((Math.sqrt(1 + 4 * val) - 1) / 2);
+            total+=x;
+            if(total>=height){
+                return true;
+            }
+        }
+           return false;
     }
 }
