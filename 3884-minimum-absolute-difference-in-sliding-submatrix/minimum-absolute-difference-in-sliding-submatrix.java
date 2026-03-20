@@ -1,24 +1,36 @@
 class Solution {
+    public int getmn(int[] arr){
+        Arrays.sort(arr);
+        int mn = Integer.MAX_VALUE;
+        for(int i = 1;i< arr.length;i++){
+            if(arr[i - 1] != arr[i]){
+                mn = Math.min(mn, Math.abs(arr[i] - arr[i - 1]));
+            }
+            
+        }
+        return mn == Integer.MAX_VALUE? 0:mn;
+    }
     public int[][] minAbsDiff(int[][] grid, int k) {
-        int [][]res = new int[grid.length-k+1][grid[0].length-k+1];
-        for(int i=k-1; i<grid.length; i++) {
-            for(int j=k-1;j<grid[0].length;j++) {
-                int []temp = new int[k*k];
-                for(int ii=i-k+1;ii<=i;ii++) {
-                    for(int jj=j-k+1;jj<=j;jj++) {
-                        temp[(ii-(i-k+1))*k + (jj-(j-k+1))] = grid[ii][jj];
+        // 1 1 1
+        // 1 1 1
+        // 1 1 1
+        int m = grid.length, n = grid[0].length;
+        int[][] answ = new int[m - k + 1][n - k + 1];
+        for(int row = 0; row < m - k + 1;row++){
+            for(int col = 0; col < n - k + 1;col++){
+                int[] arr = new int[k * k];
+                int idx = 0;
+                for(int i = row;i < row + k;i++){
+                    for(int j = col;j < col + k;j++){
+                        arr[idx] = grid[i][j];
+                        idx++;
                     }
                 }
-                Arrays.sort(temp);
-                res[i-(k-1)][j-(k-1)] = temp[temp.length-1] - temp[0];
-                for(int kk=1; kk<temp.length; kk++) {
-                    if(temp[kk]==temp[kk-1]) {
-                        continue;
-                    }
-                    res[i-(k-1)][j-(k-1)] = Math.min(res[i-(k-1)][j-(k-1)], temp[kk]-temp[kk-1]);
-                }
+                answ[row][col] = getmn(arr);
+                
+
             }
         }
-        return res;
+        return answ;
     }
 }
