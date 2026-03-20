@@ -1,35 +1,24 @@
 class Solution {
     public int[][] minAbsDiff(int[][] grid, int k) {
-        int m = grid.length, n = grid[0].length;
-        int[][] ans = new int[m - k + 1][n - k + 1];
-
-        for (int i = 0; i <= m - k; i++) {
-            for (int j = 0; j <= n - k; j++) {
-
-                List<Integer> list = new ArrayList<>();
-
-                // Collect elements of k x k submatrix
-                for (int x = i; x < i + k; x++) {
-                    for (int y = j; y < j + k; y++) {
-                        list.add(grid[x][y]);
+        int [][]res = new int[grid.length-k+1][grid[0].length-k+1];
+        for(int i=k-1; i<grid.length; i++) {
+            for(int j=k-1;j<grid[0].length;j++) {
+                int []temp = new int[k*k];
+                for(int ii=i-k+1;ii<=i;ii++) {
+                    for(int jj=j-k+1;jj<=j;jj++) {
+                        temp[(ii-(i-k+1))*k + (jj-(j-k+1))] = grid[ii][jj];
                     }
                 }
-
-                Collections.sort(list);
-
-                int minDiff = Integer.MAX_VALUE;
-
-                for (int t = 1; t < list.size(); t++) {
-                    if (!list.get(t).equals(list.get(t - 1))) {
-                        int diff = list.get(t) - list.get(t - 1);
-                        minDiff = Math.min(minDiff, diff);
+                Arrays.sort(temp);
+                res[i-(k-1)][j-(k-1)] = temp[temp.length-1] - temp[0];
+                for(int kk=1; kk<temp.length; kk++) {
+                    if(temp[kk]==temp[kk-1]) {
+                        continue;
                     }
+                    res[i-(k-1)][j-(k-1)] = Math.min(res[i-(k-1)][j-(k-1)], temp[kk]-temp[kk-1]);
                 }
-
-                ans[i][j] = (minDiff == Integer.MAX_VALUE) ? 0 : minDiff;
             }
         }
-
-        return ans;
+        return res;
     }
 }
