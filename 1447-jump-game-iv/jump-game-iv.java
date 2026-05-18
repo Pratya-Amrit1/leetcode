@@ -1,65 +1,48 @@
 class Solution {
-    private static final int N = 50001;
-    private static final boolean[] vis = new boolean[N];
-    private static final int[] q = new int[N];
-    private static final int[] nxt = new int[N];
+    public int minJumps(int[] arr) {
+        int n = arr.length, step = 0;
+        if(n == 1) return 0;
 
-    public static int minJumps(int[] arr) {
-        final int n = arr.length;
-        Arrays.fill(vis, 0, n, false);
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for(int i = 0; i < n; i++)
+            map.computeIfAbsent(arr[i], k->new ArrayList<>()).add(i);
         
-        Map<Integer, Integer> dict = new HashMap<>(n);
-        for (int i = 0; i < n; i++) {
-            int x = arr[i];
-            Integer head = dict.get(x);
-            if (head == null) {
-                nxt[i] = -1;
-            } else {
-                nxt[i] = head;
-            }
-            dict.put(x, i);
-        }
-        int front = 0;
-        int back = 0;
-
-        q[back++] = 0;
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] vis = new boolean[n];
+        
+        q.offer(0);
         vis[0] = true;
-        
-        for (int step = 0; front < back; step++) {
-            int s = back - front;
-            while (s-- > 0) {
-                int cur = q[front++];
-                
-                if (cur == n - 1) {
-                    return step;
+
+        while(!q.isEmpty()) {
+            int size = q.size();
+            step++;
+
+            for(int i = 0; i < size; i++) {
+                int curId = q.poll();
+
+                int[] nextPos = {curId+1, curId-1};
+                for(int nextId : nextPos) {
+                    if(nextId == n-1) return step;
+                    if(nextId >= 0 && nextId < n && !vis[nextId]) {
+                        vis[nextId] = true;
+                        q.offer(nextId); 
+                    }
                 }
-                
-                // Option 1: Jump backward
-                if (cur - 1 >= 0 && !vis[cur - 1]) {
-                    q[back++] = cur - 1;
-                    vis[cur - 1] = true;
-                }
-                
-                // Option 2: Jump forward
-                if (cur + 1 < n && !vis[cur + 1]) {
-                    q[back++] = cur + 1;
-                    vis[cur + 1] = true;
-                }
-                
-                // Option 3: Jump to same value indices
-                int x = arr[cur];
-                Integer head = dict.get(x);
-                if (head != null && head != -1) {
-                    for (int idx = head; idx != -1; idx = nxt[idx]) {
-                        if (!vis[idx]) {
-                            q[back++] = idx;
-                            vis[idx] = true;
+
+                // All indices with the same value
+                if(map.get(arr[curId]) != null) {
+                    for(int nextId : map.get(arr[curId])){
+                        if(nextId == n-1) return step;
+                        if(!vis[nextId]) {
+                            vis[nextId] = true;
+                            q.offer(nextId);
                         }
                     }
-                    dict.put(x, -1); 
+                    map.remove(arr[curId]);
                 }
             }
         }
-        return -1;
+
+        return step;
     }
 }
