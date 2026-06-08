@@ -7,9 +7,9 @@ class Solution {
         int subsetSum = (totalSum - target) / 2;
         int[][] dp = new int[nums.length][subsetSum + 1];
         for (int[] row : dp) Arrays.fill(row, -1);
-        return countSubsets(nums, nums.length - 1, subsetSum, dp);
+        return count(nums, nums.length - 1, subsetSum, dp);
     }
-    private int countSubsets(int[] nums, int ind, int target, int[][] dp) {
+    private int count(int[] nums, int ind, int target, int[][] dp) {
 
         if (ind == 0) {
             if (target == 0 && nums[0] == 0) return 2;
@@ -18,10 +18,10 @@ class Solution {
             return 0;
         }
         if (dp[ind][target] != -1) return dp[ind][target];
-        int notPick = countSubsets(nums, ind - 1, target, dp);
+        int notPick = count(nums, ind - 1, target, dp);
         int pick = 0;
         if (nums[ind] <= target)
-            pick = countSubsets(nums, ind - 1, target - nums[ind], dp);
+            pick = count(nums, ind - 1, target - nums[ind], dp);
 
         return dp[ind][target] = pick + notPick;
     }
