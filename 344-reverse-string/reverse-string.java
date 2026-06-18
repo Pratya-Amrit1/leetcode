@@ -1,13 +1,14 @@
-public class Solution {
+class Solution {
     public void reverseString(char[] s) {
-        List<Character> list = new ArrayList<>();
-        for (char c : s) {
-            list.add(c);
+        int n= s.length-1;
+        int i=0;
+        while(i<n){
+            char temp=s[i];
+            s[i]=s[n];
+            s[n]=temp;
+            i++;
+            n--;
         }
-        Collections.reverse(list);
-
-        for (int i = 0; i < s.length; i++) {
-            s[i] = list.get(i);
-        }
+        
     }
 }
