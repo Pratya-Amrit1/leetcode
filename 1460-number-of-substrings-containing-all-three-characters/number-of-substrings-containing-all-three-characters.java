@@ -1,14 +1,21 @@
 class Solution {
     public int numberOfSubstrings(String s) {
-        int[] lastsum = {-1 ,-1 , -1} ;
-        int cnt=0;
-        for(int i=0;i<s.length();i++){
-            char c = s.charAt(i);
-            lastsum[c -'a'] =i;
-            if(lastsum[0] !=-1 && lastsum[1] !=-1 && lastsum[2] !=-1){
-                cnt =cnt+( 1+ Math.min(lastsum[0], Math.min(lastsum[1],lastsum[2])));
+        int n = s.length();
+
+        int[] freq = new int[3];
+        int left = 0;
+        int ans = 0;
+
+        for (int right = 0; right < n; right++) {
+            freq[s.charAt(right) - 'a']++;
+
+            while (freq[0] > 0 && freq[1] > 0 && freq[2] > 0) {
+                ans += (n - right);
+                freq[s.charAt(left) - 'a']--;
+                left++;
             }
         }
-        return cnt;
+
+        return ans;
     }
 }
