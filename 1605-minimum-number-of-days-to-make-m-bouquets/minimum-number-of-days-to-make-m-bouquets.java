@@ -1,28 +1,35 @@
 class Solution {
     public int minDays(int[] bloomDay, int m, int k) {
-        int l = 1, r = 1000000000;
-        int ans = -1;
+        int l = Arrays.stream(bloomDay).min().getAsInt(), r = Arrays.stream(bloomDay).max().getAsInt();
+
+        int ans = r;
+        int n=bloomDay.length;
+        if(n<((long)m*k))return -1;
         while (l <= r) {
-            int mid = l + (r - l) / 2;
-            int consecutiveLength = 0, bouquets = 0;
-            for (int i = 0; i < bloomDay.length; i++) {
-                if (bloomDay[i] <= mid) {
-                    consecutiveLength++;
-                    if (consecutiveLength >= k) {
-                        consecutiveLength = 0;
-                        bouquets++;
-                    }
-                } else {
-                    consecutiveLength = 0;
-                }
+            int mid=l+(r-l)/2;
+            if(possible(bloomDay,mid,m,k)){
+                ans=mid;
+                r=mid-1;
             }
-            if (bouquets >= m) {
-                ans = mid;
-                r = mid - 1;
-            } else {
-                l = mid + 1;
+            else{
+                l=mid+1;
             }
         }
         return ans;
+    }
+    boolean possible(int[] bloomDay, int j,int m,int k){
+        int cnt=0;
+        int tot=0;
+        for(int i=0;i<bloomDay.length;i++){
+            if(bloomDay[i]<=j){
+                cnt++;
+            }
+            else{
+                tot+=cnt/k;
+                cnt=0;
+            }
+        }
+        tot+=cnt/k;
+        return tot>= m;
     }
 }
