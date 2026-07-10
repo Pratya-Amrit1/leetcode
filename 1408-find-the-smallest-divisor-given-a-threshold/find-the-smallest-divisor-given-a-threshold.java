@@ -1,15 +1,26 @@
 class Solution {
         public int smallestDivisor(int[] A, int threshold) {
-        int left = 1, right = (int)1e6;
-        while (left < right) {
-            int m = (left + right) / 2, sum = 0;
-            for (int i : A)
-                sum += (i + m - 1) / m;
-            if (sum > threshold)
-                left = m + 1;
-            else
-                right = m;
+        int left=1;
+        int right= Arrays.stream(A).max().getAsInt();
+        int ans=right;
+        while(left<=right){
+            int mid=(left+right)/2;
+
+            if(possible(A,mid,threshold)){
+                ans=mid;
+                right=mid-1;
+            }
+            else{
+                left=mid+1;
+            }
         }
-        return left;
+        return ans;
+    }
+    boolean possible(int[] A , int k,int check){
+        int sum=0;
+        for(int i=0;i<A.length;i++){
+            sum+=Math.ceil((double)A[i]/(double)k);
+        }
+        return sum<=check;
     }
 }
