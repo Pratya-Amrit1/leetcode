@@ -1,32 +1,31 @@
 class Solution {
-    public int finddays(int[] weights,int cap){
-        int days=1;
-        int load=0;
-        for(int i=0;i<weights.length;i++){
-            if(weights[i]+load>cap){
-            days+=1;
-            load=weights[i];
-            }
-        else{
-            load+=weights[i];
-        }}
-        return days;
-    }
     public int shipWithinDays(int[] weights, int days) {
-        int left = Arrays.stream(weights).max().getAsInt();
-        int right = Arrays.stream(weights).sum();
+        int left=Arrays.stream(weights).max().getAsInt();
+        int right= Arrays.stream(weights).sum();
+        int ans=-1;
         while(left<=right){
-            int mid=left+(right -left)/2;
-            int numberofdays=finddays(weights ,mid);
-            if(numberofdays<=days){
+            int mid=(left+right)/2;
+            if(possible(weights,days,mid)){
+                ans=mid;
                 right=mid-1;
-
-            }
-            else{
+            }else{
                 left=mid+1;
             }
         }
-        return left;
+        return ans;
     }
-
+    boolean possible(int[] weights,int days,int cap){
+        int tot=0;
+        int cnt=1;
+        for(int i=0;i<weights.length;i++){
+            if(tot+weights[i]<=cap){
+                tot+=weights[i];
+            }
+            else{
+                cnt++;
+                tot=weights[i];
+            }
+        }
+        return cnt<=days;
+    }
 }
