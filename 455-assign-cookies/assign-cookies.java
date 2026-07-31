@@ -1,24 +1,21 @@
 class Solution {
     public int findContentChildren(int[] g, int[] s) {
-         int cookiesNums = s.length;
-        if(cookiesNums == 0)  return 0;
-        Arrays.sort(g);
+        int cooklen=s.length-1;
+        if(s.length==0)return 0;
+        int childlen=g.length-1;
         Arrays.sort(s);
-
-        int maxNum = 0;
-        int cookieIndex = cookiesNums - 1;
-        int childIndex = g.length - 1;
-        while(cookieIndex >= 0 && childIndex >=0){
-            if(s[cookieIndex] >= g[childIndex]){
-                maxNum++;
-                cookieIndex--;
-                childIndex--;
-            }
-            else{
-                childIndex--;
-            }
+        Arrays.sort(g);
+        int val=0;
+        while(cooklen>=0 && childlen>=0){
+          if(s[cooklen]>=g[childlen]){
+            val++;
+            cooklen--;
+            childlen--;
+          }
+          else{
+            childlen--;
+          }
         }
-
-        return maxNum;
+        return val;
     }
 }
