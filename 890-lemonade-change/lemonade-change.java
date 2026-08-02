@@ -10,21 +10,20 @@ class Solution {
                 if(five>=1){
                     five-=1;
                     ten+=1;
+                }else{
+                    return false;
                 }
-                else return false;
             }
             else{
                 if(ten>=1 && five>=1){
-                    ten-=1;
                     five-=1;
-                }
-                else if(five>=3){
+                    ten-=1;
+                }else if(five>=3){
                     five-=3;
                 }
                 else return false;
             }
-       
-     }
-     return true;
+        }
+        return true;
     }
 }
