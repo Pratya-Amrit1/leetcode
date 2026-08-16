@@ -24,22 +24,15 @@ class Solution {
         if (root == null) return;
 
         inorder(root.left);
-
-        // If previous node exists and BST property is violated
         if (prev != null && root.val < prev.val) {
-
-            // First violation
             if (first == null) {
                 first = prev;
                 middle = root;
             }
-            // Second violation
             else {
                 last = root;
             }
         }
-
-        // Update previous node
         prev = root;
 
         inorder(root.right);
@@ -51,14 +44,11 @@ class Solution {
         prev = null;
 
         inorder(root);
-
-        // Case 1: Non-adjacent nodes swapped
         if (first != null && last != null) {
             int temp = first.val;
             first.val = last.val;
             last.val = temp;
         }
-        // Case 2: Adjacent nodes swapped
         else if (first != null && middle != null) {
             int temp = first.val;
             first.val = middle.val;
